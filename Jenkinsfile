@@ -4,8 +4,7 @@ pipeline {
     stages {
         stage('Pre-Build') {
             steps {
-                echo 'Pre-Build...'
-                echo 'Send status Pre-Build to Mail, Telegram, Slack...'
+                echo 'Successfull building...'
             }
         }
         stage('Build') {
