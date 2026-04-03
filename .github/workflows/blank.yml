@@ -13,6 +13,5 @@ jobs:
 
     # Add to .github/workflows/blank.yml after Apply step
     - name: Destroy (on destroy branch)
-      if: github.ref == 'refs/heads/destroy'
       run: terraform destroy -auto-approve -var="do_token=${{ secrets.DO_TOKEN }}"
       working-directory: modules/ec2
