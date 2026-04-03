@@ -20,6 +20,7 @@ jobs:
       run: terraform init
       working-directory: modules/ec2
 
-    - name: Destroy
+    - name: Destroy (manual trigger)
+      if: github.ref == 'refs/heads/destroy'
       run: terraform destroy -auto-approve -var="do_token=${{ secrets.DO_TOKEN }}"
       working-directory: modules/ec2
