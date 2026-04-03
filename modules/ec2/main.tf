@@ -11,7 +11,7 @@ provider "digitalocean" {
 }
 
 resource "digitalocean_droplet" "myserver" {
-  name   = "DDeply-server"
+  name   = "DDdeply-server"
   region = "nyc1"
   size   = "s-1vcpu-1gb-35gb-intel"
   image  = "ubuntu-24-04-x64"
