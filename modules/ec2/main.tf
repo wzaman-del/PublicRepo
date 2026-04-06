@@ -19,7 +19,7 @@ resource "digitalocean_droplet" "myserver" {
 
 }
 
-resource "digitalocean_droplet" "myserver" {
+resource "digitalocean_droplet" "server" {
   name   = "first-server"
   region = "nyc1"
   size   = "s-1vcpu-1gb-35gb-intel"
