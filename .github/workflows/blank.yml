@@ -4,28 +4,49 @@ on:
   push:
     branches:
       - main
+      - destroy
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-
     steps:
     - name: Get Code
       uses: actions/checkout@v3
-
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v2
-
     - name: Init
       run: terraform init
       working-directory: modules/ec2
-
     - name: Plan
       run: terraform plan -var="do_token=${{ secrets.DO_TOKEN }}"
       working-directory: modules/ec2
+    - name: Apply
+      run: terraform apply -auto-approve -var="do_token=${{ secrets.DO_TOKEN }}"
+      working-directory: modules/ec2
+    - name: Upload Terraform State
+      uses: actions/upload-artifact@v3
+      with:
+        name: terraform-state
+        path: modules/ec2/.terraform/terraform.tfstate
+        retention-days: 30
 
-    # Add to .github/workflows/blank.yml after Apply step
-    - name: Destroy (on destroy branch)
-      if: github.ref == 'refs/heads/destroy'
+  destroy:
+    if: github.ref == 'refs/heads/destroy'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get Code
+      uses: actions/checkout@v3
+    - name: Download Terraform State
+      uses: actions/download-artifact@v3
+      with:
+        name: terraform-state
+        path: modules/ec2/.terraform/
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v2
+    - name: Init
+      run: terraform init
+      working-directory: modules/ec2
+    - name: Destroy
       run: terraform destroy -auto-approve -var="do_token=${{ secrets.DO_TOKEN }}"
       working-directory: modules/ec2
